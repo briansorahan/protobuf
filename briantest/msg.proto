@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package briantest;
+
+message Msg {
+  string A = 1 [(gogoproto.jsontag) = "FieldA"];
+  string B = 2;
+}
