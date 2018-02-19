@@ -2,7 +2,14 @@ syntax = "proto3";
 
 package briantest;
 
+import "gogo.proto";
+
+message MsgTags {
+  string a_field = 1 [(gogoproto.jsontag) = "a"];
+  string b_field = 2 [(gogoproto.jsontag) = "b"];
+}
+
 message Msg {
-  string A = 1 [(gogoproto.jsontag) = "FieldA"];
-  string B = 2;
+  string a_field = 1;
+  string b_field = 2;
 }
