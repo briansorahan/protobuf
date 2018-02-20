@@ -6,7 +6,7 @@ clean:
 	@rm -f *.pb.go
 
 %.pb.go: %.proto
-	protoc -I=. -I=$(GOPATH)/src -I=../gogoproto --go_out=. $<
+	protoc -I=. -I=$(GOPATH)/src -I=../gogoproto --gogo_out=. $<
 
 test: $(OUTPUT) $(wildcard *_test.go)
 	@go test
