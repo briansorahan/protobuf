@@ -3,10 +3,13 @@ syntax = "proto3";
 package briantest;
 
 import "gogo.proto";
+import "github.com/golang/protobuf/ptypes/wrappers/wrappers.proto";
+// import "google/protobuf/wrappers.proto";
 
 message MsgTags {
   string a_field = 1 [(gogoproto.jsontag) = "a"];
   string b_field = 2 [(gogoproto.jsontag) = "b"];
+  google.protobuf.Int64Value c_field = 3 [(gogoproto.jsontag) = "c"];
 }
 
 message Msg {
