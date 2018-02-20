@@ -5,7 +5,8 @@ import (
 	"testing"
 
 	"github.com/briansorahan/death"
-	"github.com/gogo/protobuf/jsonpb"
+	gogojson "github.com/gogo/protobuf/jsonpb"
+	gjson "github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/ptypes/wrappers"
 )
 
@@ -13,7 +14,7 @@ func TestMarshal(t *testing.T) {
 	t.Run("with no gogoproto.jsontag", func(t *testing.T) {
 		var (
 			die       = death.By(t)
-			marshaler = &jsonpb.Marshaler{}
+			marshaler = &gogojson.Marshaler{}
 		)
 		data, err := marshaler.MarshalToString(&Msg{
 			AField: "foo",
@@ -40,10 +41,27 @@ func TestMarshal(t *testing.T) {
 		}
 	})
 
-	t.Run("quotes around google.protobuf.Int64Value fields", func(t *testing.T) {
+	t.Run("gogo jsonpb.Marshaler quotes around google.protobuf.Int64Value fields", func(t *testing.T) {
 		var (
 			die       = death.By(t)
-			marshaler = &jsonpb.Marshaler{}
+			marshaler = &gogojson.Marshaler{}
+		)
+		data, err := marshaler.MarshalToString(&MsgTags{
+			AField: "foo",
+			BField: "bar",
+			CField: &wrappers.Int64Value{Value: 1000000},
+		})
+		die(err)
+
+		if expected, got := `{"a":"foo","b":"bar","c":1000000}`, data; expected != got {
+			t.Fatalf("expected %s, got %s", expected, got)
+		}
+	})
+
+	t.Run("google jsonpb.Marshaler quotes around google.protobuf.Int64Value fields", func(t *testing.T) {
+		var (
+			die       = death.By(t)
+			marshaler = &gjson.Marshaler{}
 		)
 		data, err := marshaler.MarshalToString(&MsgTags{
 			AField: "foo",
