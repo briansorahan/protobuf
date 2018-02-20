@@ -149,31 +149,6 @@ type isWkt interface {
 
 // marshalObject writes a struct to the Writer.
 func (m *Marshaler) marshalObject(out *errWriter, v proto.Message, indent, typeURL string) error {
-	if jsm, ok := v.(JSONPBMarshaler); ok {
-		b, err := jsm.MarshalJSONPB(m)
-		if err != nil {
-			return err
-		}
-		if typeURL != "" {
-			// we are marshaling this object to an Any type
-			var js map[string]*json.RawMessage
-			if err = json.Unmarshal(b, &js); err != nil {
-				return fmt.Errorf("type %T produced invalid JSON: %v", v, err)
-			}
-			turl, err := json.Marshal(typeURL)
-			if err != nil {
-				return fmt.Errorf("failed to marshal type URL %q to JSON: %v", typeURL, err)
-			}
-			js["@type"] = (*json.RawMessage)(&turl)
-			if b, err = json.Marshal(js); err != nil {
-				return err
-			}
-		}
-
-		out.write(string(b))
-		return out.err
-	}
-
 	s := reflect.ValueOf(v).Elem()
 
 	// Handle well-known types.
